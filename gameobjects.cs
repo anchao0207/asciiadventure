@@ -55,7 +55,7 @@ namespace asciiadventure {
                 return "";
             }
             GameObject gameObject = Screen[newRow, newCol];
-            if (gameObject != null && !gameObject.IsPassable()) {
+            if (gameObject != null ) {
                 // TODO: How to handle other objects?
                 // walls just stop you
                 // objects can be picked up
@@ -63,7 +63,13 @@ namespace asciiadventure {
                 // also, when you move, some things may also move
                 // maybe i,j,k,l can attack in different directions?
                 // can have a "shout" command, so some objects require shouting
-                return "TODO: Handle interaction";
+                if(gameObject is Boom)
+                {
+                    gameObject.Token = "*";
+                    Screen[Row, Col] = null;
+                    return "Exploded";
+                }
+                return "Nothing happened";
             }
             // Now just make the move
             int originalRow = Row;
@@ -71,7 +77,9 @@ namespace asciiadventure {
             // now change the location of the object, if the move was legal
             Row = newRow;
             Col = newCol;
-            Screen[originalRow, originalCol] = null;
+            if (Screen[originalRow, originalCol] is Boom) { }
+            else
+                Screen[originalRow, originalCol] = null;
             Screen[Row, Col] = this;
             return "";
         }
@@ -84,8 +92,26 @@ namespace asciiadventure {
     class Treasure : GameObject {
         public Treasure(int row, int col, Screen screen) : base(row, col, "T", screen) {}
 
-        public override Boolean IsPassable() {
+        /*public override Boolean IsPassable() {
             return true;
+        }*/
+    }
+    
+    class NextFloor : GameObject
+    {
+        public NextFloor(int row, int col, Screen screen) : base(row, col, "U", screen) { }
+    }
+    class PreviousFloor : GameObject
+    {
+        public PreviousFloor(int row, int col, Screen screen) : base(row, col, "D", screen) { }
+    }
+    class Boom : GameObject
+    {
+        Boolean explode = false;
+        public Boom(int row, int col, Screen screen) : base(row, col, "o", screen) { }
+        public override bool IsPassable()
+        {
+            return true; 
         }
     }
 }

@@ -24,11 +24,24 @@ namespace asciiadventure {
                 return "negative";
             }
             // TODO: Interact with the object
+            if (other is Boom)
+            {
+                other.Delete();
+                return "Boom collected!";
+            }
             if (other is Treasure){
                 other.Delete();
                 return "Yay, we got the treasure!";
             }
+            if(other is NextFloor)
+            {
+                return "Move to next floor";
+            }
+            if (other is PreviousFloor)
+                return "Move to previous floor";
             return "ouch";
         }
+
+        
     }
 }
